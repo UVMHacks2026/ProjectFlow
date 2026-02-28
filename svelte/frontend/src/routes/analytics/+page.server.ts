@@ -64,15 +64,9 @@ Example format:
       body: JSON.stringify({ prompt })
     });
 
-    if (geminiRes.ok) {
-      const geminiData = await geminiRes.json();
-      const raw = geminiData.answer ?? '';
-      const clean = raw.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(clean);
-      if (Array.isArray(parsed) && parsed.length === 3) {
-        insights = parsed;
-      }
-    }
+    console.log('Gemini status:', geminiRes.status);
+    const geminiData = await geminiRes.json();
+    console.log('Gemini response:', JSON.stringify(geminiData))
   } catch {
     insights = FALLBACK_INSIGHTS;
   }
