@@ -3,7 +3,6 @@
     import type { PageData } from './$types';
 
     let { data }: { data: PageData } = $props();
-    let { insights, taskContext } = data;
 
     let query = $state('');
     let isQuerying = $state(false);
@@ -38,10 +37,10 @@
             const res = await fetch('/api/gemini-query', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query, taskContext })
+                body: JSON.stringify({ query, taskContext: data.taskContext })
             });
-            const data = await res.json();
-            chatResponse = data.answer ?? 'No response.';
+            const result = await res.json();
+            chatResponse = result.answer ?? 'No response.';
         } catch {
             chatResponse = 'Error contacting Gemini.';
         }
@@ -68,7 +67,7 @@
 
         <!-- Insight Cards -->
         <div class="mb-16 space-y-6">
-            {#each insights as insight}
+            {#each data.insights as insight}
                 <div class="relative rounded-2xl border p-6 {getSeverityStyles(insight.severity, insight.isAllClear)}">
                     <div class="mb-3 flex items-start justify-between">
                         <h2 class="text-sm font-bold uppercase tracking-wider opacity-80">{insight.category}</h2>
